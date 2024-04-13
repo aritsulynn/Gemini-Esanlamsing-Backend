@@ -2,6 +2,7 @@ package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,8 +15,8 @@ public class UserController {
     private UserRepository userRepository;
 
 
-
-    @GetMapping("/users/register")
+    @CrossOrigin
+    @PostMapping("/users/register")
     @ResponseBody
     public ResponseEntity<String> addUser(@RequestParam String name, @RequestParam String email, @RequestParam String password) {
         User newUser = new User();
@@ -31,6 +32,7 @@ public class UserController {
         return ResponseEntity.ok("User added successfully!");
     }
 
+    @CrossOrigin
     @PostMapping("/users/login")
     @ResponseBody
     public ResponseEntity<String> loginUser(@RequestParam String email, @RequestParam String password) {
@@ -44,10 +46,23 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed!");
     }
 
+    @CrossOrigin
     @GetMapping("/users")
     @ResponseBody
     public Iterable<User> getUsers() {
         return userRepository.findAll();
+    }
+
+    // check if the user is logged in
+    @CrossOrigin
+    @GetMapping("/users/isloggedin")
+    @ResponseBody
+    public ResponseEntity<String> isLoggedIn(@RequestParam String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
+        }
+        return ResponseEntity.ok("User is logged in!");
     }
 
 }
