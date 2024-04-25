@@ -119,12 +119,12 @@ public class DemoController {
 
 
     // TODO: install a new configuration
-    @CrossOrigin
-    @PostMapping("/installconfig")
-    public String installConfiguration(@RequestBody ) {
-        OCS o = new OCS();
-        return o.addConfiguration(dpr);
-    }
+    // @CrossOrigin
+    // @PostMapping("/installconfig")
+    // public String installConfiguration(@RequestBody a) {
+    //     OCS o = new OCS();
+    //     return o.addConfiguration(dpr);
+    // }
 
     // TODO: get all configurations
     @CrossOrigin
