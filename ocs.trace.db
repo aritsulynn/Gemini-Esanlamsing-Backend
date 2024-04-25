@@ -1,0 +1,15 @@
+2024-04-25 14:23:50 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "MASSCIENCEPLAN" not found; SQL statement:
+SELECT * FROM masSciencePlan [42102-192]
+2024-04-25 14:23:51 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "MASSCIENCEPLAN" not found; SQL statement:
+SELECT MAX(planNo) FROM masSciencePlan [42102-192]
+2024-04-25 14:24:10 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "MASSCIENCEPLAN" not found; SQL statement:
+SELECT * FROM masSciencePlan [42102-192]
+2024-04-25 14:24:10 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "MASSCIENCEPLAN" not found; SQL statement:
+SELECT * FROM masSciencePlan [42102-192]
+2024-04-25 14:24:10 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "MASSCIENCEPLAN" not found; SQL statement:
+SELECT * FROM masSciencePlan [42102-192]

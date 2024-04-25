@@ -12,6 +12,7 @@ import org.h2.store.Data;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,14 +29,21 @@ public class DemoController {
     }
 
     // get all science plans
+    // @CrossOrigin
+    // @GetMapping("/scienceplans")
+    // public ArrayList<SciencePlan> gettAllSciencePlans() {
+    //     OCS o = new OCS();
+    //     System.out.println(o.getAllSciencePlans());
+    //     return o.getAllSciencePlans();
+    // }
+
     @CrossOrigin
     @GetMapping("/scienceplans")
     public ArrayList<SciencePlan> gettAllSciencePlans() {
-        OCS o = new OCS();
+        MyOCS o = new MyOCS();
         System.out.println(o.getAllSciencePlans());
         return o.getAllSciencePlans();
     }
-
 
     @CrossOrigin
     @GetMapping("/testsubmit")
@@ -48,14 +56,10 @@ public class DemoController {
                 sp = s;
             }
         }
-        // System.out.println(sp.getSubmitter());
-        // System.out.println(sp.getDataProcRequirements());
         System.out.println(o.testSciencePlan(sp));
-        
-
-        // return "Science Plan Submitted";
         return "Science Plan Submitted";
     }
+
 
     // example of how to get a science plan by id
     @CrossOrigin
@@ -73,13 +77,13 @@ public class DemoController {
         OCS o = new OCS();
         SciencePlan sp = new SciencePlan();
         sp = o.getSciencePlanByNo(id);
-        DataProcRequirement dpr = new DataProcRequirement();
-        ArrayList<DataProcRequirement> dpr_data = sp.getDataProcRequirements();
-        for (DataProcRequirement d : dpr_data) {
-            dpr = d;
-        }
-        dpr.setContrast(3);
-        sp.setStarSystem(CONSTELLATIONS.Virgo);
+        // DataProcRequirement dpr = new DataProcRequirement();
+        // ArrayList<DataProcRequirement> dpr_data = sp.getDataProcRequirements();
+        // for (DataProcRequirement d : dpr_data) {
+        //     dpr = d;
+        // }
+        // dpr.setContrast(3);
+        // sp.setStarSystem(CONSTELLATIONS.Virgo);
         return o.testSciencePlan(sp);
         // return o.submitSciencePlan(sp);
     }
@@ -98,29 +102,38 @@ public class DemoController {
     }
 
 
-    // edit science plan
     @CrossOrigin
-    @PostMapping("/editscienceplan")
-    public String editSciencePlan(@RequestParam SciencePlan sp) {
-        OCS o = new OCS();
-        //  find the science plan by id
-        SciencePlan sciencePlan = o.getSciencePlanByNo(sp.getPlanNo());
-        //  edit the science plan
-        sciencePlan = sp;
-        //  save the science plan
-        o.submitSciencePlan(sciencePlan);
-        return "Science Plan Edited";
+    @PostMapping("/updatescienceplan")
+    public String updateSciencePlan(@RequestBody SciencePlan sp) {
+        MyOCS o = new MyOCS();
+        return o.createSciencePlan(sp);
+    }
+
+    // create a new science plan
+    @CrossOrigin
+    @PostMapping("/createscienceplan")
+    public String createscienceplan(@RequestBody SciencePlan sp){
+        MyOCS o = new MyOCS();
+        return o.createSciencePlan(sp);
     }
 
 
-    // install configuration
-    // @CrossOrigin
-    // @PostMapping("/installconfiguration")
-    // public String installConfiguration(@RequestParam int id) {
-    //     OCS o = new OCS();
-    //     SciencePlan sp = new SciencePlan();
-    //     sp = o.getSciencePlanByNo(id);
-    
-    // }
+    // TODO: install a new configuration
+    @CrossOrigin
+    @PostMapping("/installconfig")
+    public String installConfiguration(@RequestBody ) {
+        OCS o = new OCS();
+        return o.addConfiguration(dpr);
+    }
+
+    // TODO: get all configurations
+    @CrossOrigin
+    @GetMapping("/getconfig")
+    public String getConfigurations() {
+        OCS o = new OCS();
+        return o.getConfigurations();
+    }
+
+    // TODO: Validation
 
 }
