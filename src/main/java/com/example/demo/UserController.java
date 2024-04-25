@@ -43,7 +43,10 @@ public class UserController {
         if (user.getPassword().equals(password)) {
             return ResponseEntity.ok("Login successful!");
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed!");
+        else if (!user.getPassword().equals(password)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your email or password is incorrect!");
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed please try again!");
     }
 
     @CrossOrigin
