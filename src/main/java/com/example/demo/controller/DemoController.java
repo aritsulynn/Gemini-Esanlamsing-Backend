@@ -37,7 +37,6 @@ public class DemoController {
         return o.getAllSciencePlans();
     }
 
-
     // example of how to get a science plan by id
     @CrossOrigin
     @PostMapping("/getscienceplan")

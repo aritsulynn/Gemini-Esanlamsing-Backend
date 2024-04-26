@@ -15,15 +15,15 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
 @SpringBootApplication
-public class DemoApplication {
+public  class DemoApplication {
 
     public static void main(String[] args) throws ParseException {
         SpringApplication.run(DemoApplication.class, args);
         OCS ocs = new OCS(true);
-    //    ArrayList<SciencePlan> sciencePlans = ocs.getAllSciencePlans();
-    //    for (SciencePlan sp : sciencePlans) {
-    //        System.out.println(sp);
-    //    }
+       ArrayList<SciencePlan> sciencePlans = ocs.getAllSciencePlans();
+       for (SciencePlan sp : sciencePlans) {
+           System.out.println(sp);
+       }
         DataProcRequirement dpr = new DataProcRequirement(
             "PNG",
             "Fine",
