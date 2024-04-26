@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.controller;
 
 import edu.gemini.app.ocs.OCS;
 import edu.gemini.app.ocs.model.DataProcRequirement;
@@ -9,6 +9,7 @@ import edu.gemini.app.ocs.model.StarSystem.CONSTELLATIONS;
 import edu.gemini.app.ocs.model.StarSystem;
 
 import org.h2.store.Data;
+import org.springframework.data.annotation.AccessType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,36 +29,12 @@ public class DemoController {
         return "Hello World!";
     }
 
-    // get all science plans
-    // @CrossOrigin
-    // @GetMapping("/scienceplans")
-    // public ArrayList<SciencePlan> gettAllSciencePlans() {
-    //     OCS o = new OCS();
-    //     System.out.println(o.getAllSciencePlans());
-    //     return o.getAllSciencePlans();
-    // }
-
     @CrossOrigin
     @GetMapping("/scienceplans")
     public ArrayList<SciencePlan> gettAllSciencePlans() {
-        MyOCS o = new MyOCS();
+        OCS o = new OCS();
         System.out.println(o.getAllSciencePlans());
         return o.getAllSciencePlans();
-    }
-
-    @CrossOrigin
-    @GetMapping("/testsubmit")
-    public String submitSciencePlan() {
-        OCS o = new OCS();
-        SciencePlan sp = new SciencePlan();
-        ArrayList<SciencePlan> sciencePlans = o.getAllSciencePlans();
-        for (SciencePlan s : sciencePlans) {
-            if (s.getPlanNo() == 1) {
-                sp = s;
-            }
-        }
-        System.out.println(o.testSciencePlan(sp));
-        return "Science Plan Submitted";
     }
 
 
@@ -69,7 +46,14 @@ public class DemoController {
         return o.getSciencePlanByNo(id);
     }
 
-    
+    // create a new science plan
+    @CrossOrigin
+    @PostMapping("/createscienceplan")
+    public String createscienceplan(@RequestBody SciencePlan sp){
+        OCS o = new OCS();
+        return o.createSciencePlan(sp);
+    }
+
     // test science plan
     @CrossOrigin
     @PostMapping("/testscienceplan")
@@ -77,16 +61,9 @@ public class DemoController {
         OCS o = new OCS();
         SciencePlan sp = new SciencePlan();
         sp = o.getSciencePlanByNo(id);
-        // DataProcRequirement dpr = new DataProcRequirement();
-        // ArrayList<DataProcRequirement> dpr_data = sp.getDataProcRequirements();
-        // for (DataProcRequirement d : dpr_data) {
-        //     dpr = d;
-        // }
-        // dpr.setContrast(3);
-        // sp.setStarSystem(CONSTELLATIONS.Virgo);
         return o.testSciencePlan(sp);
-        // return o.submitSciencePlan(sp);
     }
+
 
     // submit science plan
     @CrossOrigin
@@ -103,37 +80,23 @@ public class DemoController {
 
 
     @CrossOrigin
-    @PostMapping("/updatescienceplan")
-    public String updateSciencePlan(@RequestBody SciencePlan sp) {
-        MyOCS o = new MyOCS();
-        return o.createSciencePlan(sp);
-    }
-
-    // create a new science plan
-    @CrossOrigin
-    @PostMapping("/createscienceplan")
-    public String createscienceplan(@RequestBody SciencePlan sp){
-        MyOCS o = new MyOCS();
-        return o.createSciencePlan(sp);
-    }
-
-
-    // TODO: install a new configuration
-    // @CrossOrigin
-    // @PostMapping("/installconfig")
-    // public String installConfiguration(@RequestBody a) {
-    //     OCS o = new OCS();
-    //     return o.addConfiguration(dpr);
-    // }
-
-    // TODO: get all configurations
-    @CrossOrigin
-    @GetMapping("/getconfig")
-    public String getConfigurations() {
+    @PostMapping("/validate")
+    public String validateSciencePlan(@RequestParam int id) {
         OCS o = new OCS();
-        return o.getConfigurations();
+        SciencePlan sp = o.getSciencePlanByNo(id);
+        if(sp != null && sp.getStatus() == STATUS.SUBMITTED){
+           o.updateSciencePlanStatus(id, STATUS.VALIDATED);
+           return "Science plan with ID " + id + " validated successfully.";
+        }
+        else if (sp != null && sp.getStatus() == STATUS.VALIDATED){
+            return "Science plan with ID " + id + " already validated.";
+        }
+        o.updateSciencePlanStatus(id, STATUS.INVALIDATED);
+        return "Failed to validate science plan with ID " + id + ".";
     }
 
-    // TODO: Validation
+    // TODO: implement the add configuration endpoint
+
+
 
 }

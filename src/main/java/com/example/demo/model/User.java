@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.model;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -10,11 +10,13 @@ public class User {
     private String name;
     private String email;
     private String password;
+    private String role;
     
     public User() {
     }
 
-    public User(String name, String email, String password) {
+    public User(String role, String name, String email, String password) {
+        this.role = role;
         this.name = name;
         this.email = email;
         this.password = password;
@@ -52,4 +54,23 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
+                '}';
+    }
+    
 }
