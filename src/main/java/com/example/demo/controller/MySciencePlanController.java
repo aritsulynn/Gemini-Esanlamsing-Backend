@@ -226,23 +226,29 @@ public class MySciencePlanController {
     @ResponseBody
     public String validateSciencePlan(@RequestParam Long id) {
         MySciencePlan sp = MysciencePlanRepository.findById(id).orElse(null);
+
         if (sp == null) {
             return "Science Plan not found!";
         }
-        if (sp.getStatus().equals("SUBMITTED")){
-            sp.setStatus("VALIDATED");
-            MysciencePlanRepository.save(sp);
-            return "Science plan with ID " + id + " validated successfully.";
+//        if (sp.getStatus().equals("SUBMITTED")){
+//            sp.setStatus("VALIDATED");
+//            MysciencePlanRepository.save(sp);
+//            return "Science plan with ID " + id + " validated successfully.";
+//        }
+//        else if(sp.getStatus().equals("VALIDATED")){
+//            return "Science Plan Already Validated";
+//        }
+//        else if(sp.getStatus().equals("INVALIDATED")){
+//            return "Science Plan Already Invalidated";
+//        }
+//
+//        sp.setStatus("INVALIDATED");
+//        MysciencePlanRepository.save(sp);
+        if(sp.getStatus().equals("TESTED")){
+            // Send to frontend
+            // With option to VALIDATE or INVALIDATE
+            return "Sent to validate science plan with ID " + id + ".";
         }
-        else if(sp.getStatus().equals("VALIDATED")){
-            return "Science Plan Already Validated";
-        }
-        else if(sp.getStatus().equals("INVALIDATED")){
-            return "Science Plan Already Invalidated";
-        }
-        
-        sp.setStatus("INVALIDATED");
-        MysciencePlanRepository.save(sp);
         return "Failed to validate science plan with ID " + id + ".";
     }
 
