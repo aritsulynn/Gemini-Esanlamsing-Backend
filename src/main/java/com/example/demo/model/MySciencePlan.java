@@ -19,7 +19,28 @@ public class MySciencePlan {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "plan_seq")
     @SequenceGenerator(name = "plan_seq", sequenceName = "plan_sequence", allocationSize = 1)
     private long planNo;
-    
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(name = "user_id", updatable = false, insertable = false)
+    private Long userId;
+
+    // Constructors, getters and setters
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+//        this.userId = user != null ? user.getUserID() : null;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
     private String creator;
     private String submitter;
     private double fundingInUSD;

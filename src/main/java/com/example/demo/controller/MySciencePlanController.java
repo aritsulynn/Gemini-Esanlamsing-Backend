@@ -4,12 +4,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.example.demo.model.User;
 import org.h2.store.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.model.MySciencePlan;
 import com.example.demo.repository.MySciencePlanRepository;
+import com.example.demo.repository.UserRepository;
 
 import edu.gemini.app.ocs.OCS;
 import edu.gemini.app.ocs.model.DataProcRequirement;
@@ -24,6 +26,8 @@ public class MySciencePlanController {
     @Autowired
     private MySciencePlanRepository MysciencePlanRepository;
 
+    @Autowired
+    private UserRepository UserRepository;
 
     @CrossOrigin
     @GetMapping("/sp")
@@ -85,45 +89,33 @@ public class MySciencePlanController {
 
     //  auto generated 
     @CrossOrigin
-    @GetMapping("/autosp")
-    @ResponseBody
-    public ResponseEntity<?> getAutoSciencePlan() throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date startDate = dateFormat.parse("15/05/2021 13:00:00");
-        Date endDate = dateFormat.parse("15/05/2021 23:59:59");
+    @GetMapping("/autosp/{email}")
+    public ResponseEntity<?> getAutoSciencePlan(@PathVariable String email) {
+        User user = UserRepository.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with email " + email + " not found");
+        }
 
-        String[] dataProcRequirements = {"PNG", "Fine", "B&W mode", "3.0", "0.0", "0.0", "10.15", "5.0", "7.0", "10.0", "0.0", "0.0", "0.0"};
-        MySciencePlan sp1 = new MySciencePlan(
-            "Himji Paehi",
-            "Himji Paehi",
-            1000.0,
-            "To study the stars",
-            "Virgo",
-            startDate,
-            endDate,
-            "CHILE",
-            dataProcRequirements,
-            "SAVED"
-        );
-        MySciencePlan sp2 = new MySciencePlan(
-                "Pae Him",
-                "Pae Him",
-                1500.0,
-                "Test case for failure",
-                "Andromeda",
-                startDate,
-                endDate,
-                "HAWAII",
-                dataProcRequirements,
-                "SAVED"
-        );
-        try{
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date startDate = dateFormat.parse("15/05/2021 13:00:00");
+            Date endDate = dateFormat.parse("15/05/2021 23:59:59");
+
+            String[] dataProcRequirements = {"PNG", "Fine", "B&W mode", "3.0", "0.0", "0.0", "10.15", "5.0", "7.0", "10.0", "0.0", "0.0", "0.0"};
+            MySciencePlan sp1 = new MySciencePlan("Himji Paehi", "Himji Paehi", 1000.0, "To study the stars", "Virgo", startDate, endDate, "CHILE", dataProcRequirements, "SAVED");
+            MySciencePlan sp2 = new MySciencePlan("Pae Him", "Himji Paehi", 1500.0, "Test case for failure", "Andromeda", startDate, endDate, "HAWAII", dataProcRequirements, "SAVED");
+
+            sp1.setUser(user); // Link the user
+            sp2.setUser(user); // Link the user
             MysciencePlanRepository.save(sp1);
             MysciencePlanRepository.save(sp2);
+            return ResponseEntity.ok("Auto-generated science plans successfully.");
+
+        } catch (ParseException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Date format error: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to auto generate science plans.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to auto generate science plans: " + e.getMessage());
         }
-        return ResponseEntity.ok("Auto generated science plans successfully.");
     }
 
 
