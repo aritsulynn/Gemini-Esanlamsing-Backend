@@ -210,6 +210,7 @@ public class MySciencePlanController {
         if(sp.getStatus() == "SUBMITTED"){
             return "Science Plan Already Submitted";
         }
+        sciplan.setPlanNo((int) sp.getPlanNo());
         sciplan.setStatus(STATUS.valueOf(sp.getStatus()));
         String submitResults = o.submitSciencePlan(sciplan);
         if (submitResults.equals("Your science plan has been submitted.")) {

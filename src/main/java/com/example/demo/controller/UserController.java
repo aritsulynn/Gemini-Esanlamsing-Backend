@@ -35,13 +35,13 @@ public class UserController {
     @CrossOrigin
     @PostMapping("/users/login")
     @ResponseBody
-    public ResponseEntity<String> loginUser(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<?> loginUser(@RequestParam String email, @RequestParam String password) {
         User user = userRepository.findByEmail(email);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found!");
         }
         if (user.getPassword().equals(password)) {
-            return ResponseEntity.ok("Login successful!");
+            return ResponseEntity.ok(user);
         }
         else if (!user.getPassword().equals(password)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Your email or password is incorrect!");
