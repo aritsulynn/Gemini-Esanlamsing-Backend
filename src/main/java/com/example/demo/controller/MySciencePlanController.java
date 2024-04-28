@@ -244,7 +244,7 @@ public class MySciencePlanController {
 //
 //        sp.setStatus("INVALIDATED");
 //        MysciencePlanRepository.save(sp);
-        if(sp.getStatus().equals("TESTED")){
+        if(sp.getStatus().equals("SUBMITTED")){
             // Send to frontend
             // With option to VALIDATE or INVALIDATE
             return "Sent to validate science plan with ID " + id + ".";
