@@ -16,7 +16,8 @@ import edu.gemini.app.ocs.model.DataProcRequirement;
 import edu.gemini.app.ocs.model.SciencePlan;
 import edu.gemini.app.ocs.model.SciencePlan.STATUS;
 import edu.gemini.app.ocs.model.StarSystem.CONSTELLATIONS;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 @RestController
 public class MySciencePlanController {
     
@@ -86,7 +87,7 @@ public class MySciencePlanController {
     @CrossOrigin
     @GetMapping("/autosp")
     @ResponseBody
-    public String getAutoSciencePlan() throws ParseException {
+    public ResponseEntity<?> getAutoSciencePlan() throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date startDate = dateFormat.parse("15/05/2021 13:00:00");
         Date endDate = dateFormat.parse("15/05/2021 23:59:59");
@@ -120,9 +121,9 @@ public class MySciencePlanController {
             MysciencePlanRepository.save(sp1);
             MysciencePlanRepository.save(sp2);
         } catch (Exception e) {
-            return "Failed to auto generate science plans";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to auto generate science plans.");
         }
-        return "Auto generated successfully";
+        return ResponseEntity.ok("Auto generated science plans successfully.");
     }
 
 
@@ -225,26 +226,45 @@ public class MySciencePlanController {
     @CrossOrigin
     @PostMapping("/vsp")
     @ResponseBody
-    public String validateSciencePlan(@RequestParam Long id) {
+    public ResponseEntity<?> validateSciencePlan(@RequestParam Long id) {
         MySciencePlan sp = MysciencePlanRepository.findById(id).orElse(null);
         if (sp == null) {
-            return "Science Plan not found!";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Science Plan not found!");
         }
         if (sp.getStatus().equals("SUBMITTED")){
             sp.setStatus("VALIDATED");
             MysciencePlanRepository.save(sp);
-            return "Science plan with ID " + id + " validated successfully.";
+            return ResponseEntity.ok("Science plan with ID " + id + " validated successfully.");
         }
         else if(sp.getStatus().equals("VALIDATED")){
-            return "Science Plan Already Validated";
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Science Plan Already Validated");
         }
         else if(sp.getStatus().equals("INVALIDATED")){
-            return "Science Plan Already Invalidated";
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Science Plan Already Invalidated");
         }
-        
-        sp.setStatus("INVALIDATED");
-        MysciencePlanRepository.save(sp);
-        return "Failed to validate science plan with ID " + id + ".";
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to validate science plan with ID " + id + ".");
     }
 
+    // invalidate science plan
+    @CrossOrigin
+    @PostMapping("/ivsp")
+    @ResponseBody
+    public ResponseEntity<?> invalidateSciencePlan(@RequestParam Long id) {
+        MySciencePlan sp = MysciencePlanRepository.findById(id).orElse(null);
+        if (sp == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Science Plan not found!");
+        }
+        if (sp.getStatus().equals("SUBMITTED")){
+            sp.setStatus("INVALIDATED");
+            MysciencePlanRepository.save(sp);
+            return ResponseEntity.ok("Science plan with ID " + id + " invalidated successfully.");
+        }
+        else if(sp.getStatus().equals("INVALIDATED")){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Science Plan Already Invalidated");
+        }
+        else if(sp.getStatus().equals("VALIDATED")){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Science Plan Already Validated");
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to invalidate science plan with ID " + id + ".");
+    }
 }   
