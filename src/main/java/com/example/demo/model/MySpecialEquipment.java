@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "special_equipment")
-public class SpecialEquipment {
+public class MySpecialEquipment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,8 +18,12 @@ public class SpecialEquipment {
     private String ownerName;
     private Date installedDate;
 
+    public MySpecialEquipment() {
+    }
+    
+
     // Constructor
-    public SpecialEquipment(String equipmentName, String ownerName, Date installedDate) {
+    public MySpecialEquipment(String equipmentName, String ownerName, Date installedDate) {
         this.equipmentName = equipmentName;
         this.ownerName = ownerName;
         this.installedDate = installedDate;

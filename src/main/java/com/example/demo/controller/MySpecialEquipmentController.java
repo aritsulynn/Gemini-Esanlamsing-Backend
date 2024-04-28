@@ -5,23 +5,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.model.SpecialEquipment;
-import com.example.demo.repository.SpecialEquipmentRepository;
+import com.example.demo.model.MySpecialEquipment;
+import com.example.demo.repository.MySpecialEquipmentRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/equipment")
-public class SpecialEquipmentController {
+@CrossOrigin(origins = "*", allowedHeaders = "*") // Allow requests from all origins
+public class MySpecialEquipmentController {
 
     @Autowired
-    private SpecialEquipmentRepository specialEquipmentRepository;
+    private MySpecialEquipmentRepository specialEquipmentRepository;
 
     @PostMapping("/add")
-    public ResponseEntity<String> addEquipment(@RequestBody SpecialEquipment equipment) {
+    public ResponseEntity<String> addEquipment(@RequestBody MySpecialEquipment equipment) {
         // Check if the equipment already exists
-        Optional<SpecialEquipment> existingEquipment = specialEquipmentRepository.findByEquipmentName(equipment.getEquipmentName());
+        Optional<MySpecialEquipment> existingEquipment = specialEquipmentRepository.findByEquipmentName(equipment.getEquipmentName());
         if (existingEquipment.isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Equipment already exists!");
         }
@@ -32,14 +33,14 @@ public class SpecialEquipmentController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<SpecialEquipment>> getAllEquipment() {
-        List<SpecialEquipment> equipmentList = specialEquipmentRepository.findAll();
+    public ResponseEntity<List<MySpecialEquipment>> getAllEquipment() {
+        List<MySpecialEquipment> equipmentList = specialEquipmentRepository.findAll();
         return ResponseEntity.ok(equipmentList);
     }
 
     @GetMapping("/{equipmentName}")
-    public ResponseEntity<SpecialEquipment> getEquipmentByName(@PathVariable String equipmentName) {
-        Optional<SpecialEquipment> equipment = specialEquipmentRepository.findByEquipmentName(equipmentName);
+    public ResponseEntity<MySpecialEquipment> getEquipmentByName(@PathVariable String equipmentName) {
+        Optional<MySpecialEquipment> equipment = specialEquipmentRepository.findByEquipmentName(equipmentName);
         if (equipment.isPresent()) {
             return ResponseEntity.ok(equipment.get());
         } else {
@@ -49,7 +50,7 @@ public class SpecialEquipmentController {
 
     @DeleteMapping("/{equipmentName}")
     public ResponseEntity<String> deleteEquipment(@PathVariable String equipmentName) {
-        Optional<SpecialEquipment> equipment = specialEquipmentRepository.findByEquipmentName(equipmentName);
+        Optional<MySpecialEquipment> equipment = specialEquipmentRepository.findByEquipmentName(equipmentName);
         if (equipment.isPresent()) {
             specialEquipmentRepository.delete(equipment.get());
             return ResponseEntity.ok("Equipment deleted successfully!");
