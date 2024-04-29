@@ -31,7 +31,7 @@ public class UserController {
         userRepository.save(newUser);
         return ResponseEntity.ok("User added successfully!");
     }
-
+    
     @CrossOrigin
     @PostMapping("/users/login")
     @ResponseBody

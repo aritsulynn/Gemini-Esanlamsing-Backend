@@ -47,6 +47,22 @@ public class MySpecialEquipmentController {
             return ResponseEntity.notFound().build();
         }
     }
+    @PutMapping("/{equipmentName}")
+public ResponseEntity<String> editEquipment(@PathVariable String equipmentName, @RequestBody MySpecialEquipment updatedEquipment) {
+    Optional<MySpecialEquipment> existingEquipment = specialEquipmentRepository.findByEquipmentName(equipmentName);
+    if (existingEquipment.isPresent()) {
+        MySpecialEquipment equipment = existingEquipment.get();
+        // Update the properties of the existing equipment
+        equipment.setEquipmentName(updatedEquipment.getEquipmentName());
+        equipment.setOwnerName(updatedEquipment.getOwnerName());
+        equipment.setInstalledDate(updatedEquipment.getInstalledDate());
+        // Save the updated equipment
+        specialEquipmentRepository.save(equipment);
+        return ResponseEntity.ok("Equipment updated successfully!");
+    } else {
+        return ResponseEntity.notFound().build();
+    }
+}
 
     @DeleteMapping("/{equipmentName}")
     public ResponseEntity<String> deleteEquipment(@PathVariable String equipmentName) {

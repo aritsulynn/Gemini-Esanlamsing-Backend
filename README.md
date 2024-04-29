@@ -1,13 +1,8 @@
 # SpringBootOCS
 
-You need to have `Postgresql` on your device and need to go to `pgAdmin` and create database name `ocs`
-Then install `postman` on your Computer and do following steps:
-1. You need to create user which using `POST` and paste `http://localhost:3030/users/register?role=Astronomer&email=astronomer@gmail.com&password=1234` and `http://localhost:3030/users/register?role=Science Observer&email=observer@gmail.com&password=1234` to insert it in postman to database.
-2. Create test science plan data by using `GET` and paste `http://localhost:3030/autosp/astronomer@gmail.com` to insert it in postman to database.
-Then back to VSCODE and do this:
-3. run `DemoApplication.java` to finish running backend.
-
-
+# How to run Backend with `Docker` ?
+1. Start server by using `docker-compose up`
+2. Stop the server by using `docker-compose down`
 
 # Our selected design pattern is `MVC` or ` Model-View-Controller `
     - It's seperates the components: Model, View, and Controller so it help managing complexity by dividing the responsibilities of the application.
